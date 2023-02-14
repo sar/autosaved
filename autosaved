@@ -1,11 +1,18 @@
-#!/bin/bash
+#!/bin/sh
 
 # args::
 ASD_TARGET="none"
 ASD_GIT_BRANCH="_asd_" 
 ASD_DELAY=900
+ASD_RUN_ROOT=$PWD
+GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
+YELLOW=$(tput setaf 3)
+GRAY=$(tput setaf 244)
+RED=$(tput setaf 9)
+NORMAL=$(tput sgr0)
 
-while [[ $# -gt 0 ]]
+while [ $# -gt 0 ]
 do
     arg="$1"
     case $arg in 
@@ -41,33 +48,36 @@ fi
 
 # thread::
 while true; do
-    printf "[autosaved]::[$(date +%s)]::checking for changes in ${ASD_TARGET}\n"
-    cd ${ASD_TARGET}
+    printf "${GRAY}[autosaved->$(date +%s)]::${GREEN}[diff->dir]::${CYAN}${ASD_TARGET}\n"
+    # cd ${ASD_TARGET}
 
     # find::.git::repositories
-    for dir in $(find . -type d -name .git); do
-        cd "$(dirname "$dir")"
+    for dir in $(find $ASD_TARGET -type d -name .git); do
+        echo "cd::${dir%.git}"
+        cd "$(dirname "${dir%.git}")"
 
         # check::git_status
         if ! git diff-index --quiet HEAD --; then
             # stage::changes::
             git add .
+            printf "${GRAY}[autosaved->$(date +%s)]::${RED}[git_stage]::${CYAN}$(pwd)\n"
 
             if ! git show-ref refs/heads/_asd &> /dev/null; then
                 git branch ${ASD_GIT_BRANCH}
+                printf "${GRAY}[autosaved->$(date +%s)]::${RED}[git_branch->${ASD_GIT_BRANCH}]::${CYAN}$(pwd)\n"
             fi
 
             # commit::
             GIT_MOD_C=$(git diff --numstat HEAD | wc -l)
             git commit -m "auto:: ${GIT_MOD_C} files modified"
 
-            printf "[autosaved]::[$(date +%s)]::[${GIT_MOD_C}]::git_commit::$(pwd)\n"
+            printf "${GRAY}[autosaved->$(date +%s)]::${RED}[git_commit->${GIT_MOD_C}]::${CYAN}$(pwd)\n"
         fi
 
-        cd ../..
+        cd "${ASD_RUN_ROOT}"
     done
 
-    printf "[autosaved]::[$(date +%s)]::[${ASD_DELAY}]::thread_sleep\n"
+    printf "${GRAY}[autosaved->$(date +%s)]::${GREEN}[thread_sleep->${ASD_DELAY}]${NORMAL}\n"
     sleep ${ASD_DELAY}
 done
 
