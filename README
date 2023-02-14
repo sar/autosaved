@@ -1,0 +1,51 @@
+================================================
+Autosaved: Git Commit Daemon
+================================================
+
+This lightweight shell script is designed to recursively check a target directory for Git repositories, stage all changes, and commit them to the `_asd_` branch (creating the branch if it doesn't already exist) with a message indicating the number of modified files. The script will run as a background daemon, checking for changes every 15 minutes.
+
+------------------------------------------------
+REQUIREMENTS
+------------------------------------------------
+
+Common Linux/UNIX binaries must be installed and available in the `$PATH`, to search you can use:
+
+$ which git find printf
+/usr/bin/git
+/usr/bin/find
+/usr/bin/printf
+
+Note `printf` can be replaced with `echo` in shell script if desired.
+
+------------------------------------------------
+USAGE INFORMATION
+------------------------------------------------
+
+Clone git repository and make the script executable using `chmod +x autosaved.sh`. Optionally, copy it to `/usr/sbin/autosaved` to access as a deamon. Instructions for usage can be printed using `-h` help text argument.
+
+[autosaved]::git autocommit daemon
+Automatically stage and commits change to '_asd_' branch every 15 minutes
+Usage: autosaved --target DIRECTORY [--branch BRANCH] [--delay DELAY]
+  --target  ASD_TARGET  Required. Spcify directory to watch for git repo(s), recursively.
+  --branch  ASD_BRANCH  Optional. Default value '_asd_'. Specify git branch to commit changes.
+  --delay   ASD_DELAY   Optional. Default value '900'. Specify thread sleep delay.
+
+------------------------------------------------
+SCRIPT VERBOSITY 
+------------------------------------------------
+
+The script will display status information, including these events to `stdout`:
+
+* When the script starts checking for changes
+* When changes are committed
+* When the script is sleeping
+
+------------------------------------------------
+NOTICE
+------------------------------------------------
+
+Please make sure to test this script in a safe and controlled environment before using it on important data. The script is provided as-is and the author is not responsible for any potential data loss or corruption.
+
+License
+
+Project made available under GPLv3 License, refer to [LICENSE](LICENSE).
