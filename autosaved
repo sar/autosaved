@@ -5,7 +5,7 @@ ASD_TARGET="none"
 ASD_GIT_BRANCH="_asd_" 
 ASD_DELAY=900
 
-while [[ $# -gt 0 ]]
+while [ $# -gt 0 ]
 do
     arg="$1"
     case $arg in 
@@ -34,15 +34,15 @@ do
 done
 
 # check::arg::dir
-if [ ! ~d "${TARGET}" ]; then
+if [ ! -d "${ASD_TARGET}" ]; then
     printf "ERROR: ${ASD_TARGET} does not exist or is not a directory \n"
     exit 1;
 fi
 
 # thread::
 while true; do
-    printf "[autosaved]::[$(date +%s)]::checking for changes in ${TARGET}\n"
-    cd ${TARGET}
+    printf "[autosaved]::[$(date +%s)]::checking for changes in ${ASD_TARGET}\n"
+    cd ${ASD_TARGET}
 
     # find::.git::repositories
     for dir in $(find . -type d -name .git); do
@@ -54,21 +54,21 @@ while true; do
             git add .
 
             if ! git show-ref refs/heads/_asd &> /dev/null; then
-                git branch ${GIT_BRANCH}
+                git branch ${ASD_GIT_BRANCH}
             fi
 
             # commit::
-            GIT_MODIFIED_COUNT=$(git diff --numstat HEAD | wc -l)
-            git commit -m "auto:: $GIT_MODIFIED files modified"
+            GIT_MOD_C=$(git diff --numstat HEAD | wc -l)
+            git commit -m "auto:: ${GIT_MOD_C} files modified"
 
-            printf "[autosaved]::[$(date +%s)]::[$GIT_MODIFIED_COUNT]::git_commit::$(pwd)\n"
+            printf "[autosaved]::[$(date +%s)]::[${GIT_MOD_C}]::git_commit::$(pwd)\n"
         fi
 
         cd ../..
     done
 
-    printf "[autosaved]::[$(date +%s)]::[$ASD_DELAY]::thread_sleep\n"
-    sleep $ASD_DELAY
+    printf "[autosaved]::[$(date +%s)]::[${ASD_DELAY}]::thread_sleep\n"
+    sleep ${ASD_DELAY}
 done
 
 set +x;
