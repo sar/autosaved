@@ -54,7 +54,6 @@ while true; do
     # find::.git::repositories
     for dir in $(find $ASD_TARGET -type d -name .git); do
         cd "$(dirname "${dir%.git}")"
-        echo "CURRENT_DIR::${PWD}"
 
         # check::git_status
         if ! git diff-index --quiet HEAD --; then
