@@ -6,7 +6,7 @@ ASD_GIT_BRANCH="_asd_"
 ASD_DELAY=900
 ASD_RUN_ROOT=$PWD
 GREEN=$(tput setaf 2)
-CYAN=$(tput setaf 6)
+CYAN=$(tput setaf 12)
 YELLOW=$(tput setaf 3)
 GRAY=$(tput setaf 244)
 RED=$(tput setaf 9)
@@ -60,11 +60,11 @@ while true; do
         if ! git diff-index --quiet HEAD --; then
             # stage::changes::
             git add .
-            printf "${GRAY}[autosaved->$(date +%s)]::${RED}[git_stage]::${CYAN}$(pwd)\n"
+            printf "${GRAY}[autosaved->$(date +%s)]::${RED}[git_stage]::${CYAN}$(pwd)${RED}\n"
 
             if ! git show-ref refs/heads/_asd &> /dev/null; then
                 git branch ${ASD_GIT_BRANCH}
-                printf "${GRAY}[autosaved->$(date +%s)]::${RED}[git_branch->${ASD_GIT_BRANCH}]::${CYAN}$(pwd)\n"
+                printf "${GRAY}[autosaved->$(date +%s)]::${RED}[git_branch->${ASD_GIT_BRANCH}]::${CYAN}$(pwd)${RED}\n"
             fi
 
             # commit::
